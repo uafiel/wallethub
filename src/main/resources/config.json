@@ -1,0 +1,7 @@
+{
+  "pageInfo": {
+    "browserName": "chrome",
+    "baseURL": "https://wallethub.com",
+    "waitTimeOut": "20"
+  }
+}
