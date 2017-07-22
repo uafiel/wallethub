@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -17,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class BaseTest {
 
     protected static WebDriver driver;
-    protected static WebDriverWait wait;
     public Logger log = LogManager.getLogger(BaseTest.class.getName());
 
     @BeforeClass
@@ -31,14 +29,12 @@ public class BaseTest {
             JSONObject pageInfo = (JSONObject) jsonObject.get("pageInfo");
             browserName = pageInfo.get("browserName").toString();
             baseURL = pageInfo.get("baseURL").toString();
-            waitTimeOut = Integer.parseInt(pageInfo.get("waitTimeOut").toString());
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
 
         driver = BrowserFactory.getDriver(browserName);
-        wait = new WebDriverWait(driver, waitTimeOut);
         driver.get(baseURL);
         return driver;
 
