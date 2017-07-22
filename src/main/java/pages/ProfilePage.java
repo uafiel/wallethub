@@ -97,8 +97,10 @@ public class ProfilePage extends BasePage {
         return this;
     }
 
-    public Boolean verifyStarsAreHighlithed() {
+    public Boolean verifyStarsAreHighlithed(String starsNumber) {
         this.log.info("Check if all necessary stars are highlighted.");
+        int stars = Integer.parseInt(starsNumber);
+
         this.log.info(highlightedStars.size() + " stars are highlighted.");
         for (int i = 0; i < highlightedStars.size(); i++) {
             this.log.info("Star # " + highlightedStars.get(i).getText() + " is highlighted.");
@@ -107,6 +109,9 @@ public class ProfilePage extends BasePage {
                 break;
             }
 
+        }
+        if (!(highlightedStars.size()==stars)) {
+            return false;
         }
 
         return true;

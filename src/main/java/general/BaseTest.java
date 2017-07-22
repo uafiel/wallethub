@@ -10,27 +10,15 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
-
 import java.io.FileReader;
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
 
-    public Logger log = LogManager.getLogger(BaseTest.class.getName());
     protected static WebDriver driver;
     protected static WebDriverWait wait;
-
-    public BasePage loadDirectLink(String URL, BasePage p ) {
-        driver.get(URL);
-        this.log.info(URL + " loaded.");
-        return p;
-    }
-
-    @BeforeMethod
-    public void beforeTest(Method method) {
-        String testName = method.getName();
-        log.info("Start: " + testName);
-    }
+    public Logger log = LogManager.getLogger(BaseTest.class.getName());
 
     @BeforeClass
     public static WebDriver setUp() {
@@ -56,8 +44,25 @@ public class BaseTest {
 
     }
 
+    protected BasePage loadDirectLink(String URL, BasePage p) {
+        waitImplicitly(7);
+        driver.get(URL);
+        this.log.info(URL + " loaded.");
+        return p;
+    }
+
+    protected void waitImplicitly(int secondsToWait) {
+        driver.manage().timeouts().implicitlyWait(secondsToWait, TimeUnit.SECONDS);
+    }
+
+    @BeforeMethod
+    public void beforeTest(Method method) {
+        String testName = method.getName();
+        log.info("Start: " + testName);
+    }
+
     @AfterClass
-    public void quitDriver(){
+    public void quitDriver() {
         driver.quit();
     }
 

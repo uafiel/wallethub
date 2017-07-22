@@ -18,6 +18,7 @@ public class HomePage extends BasePage  {
     public LoginPage clickLoginBtn() {
         loginBtn.click();
         this.log.info("Login button clicked.");
+        waitImplicitly(2);
         return new LoginPage(getDriver());
     }
 

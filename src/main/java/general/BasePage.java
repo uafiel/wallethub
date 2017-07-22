@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileReader;
+import java.util.concurrent.TimeUnit;
 
 public class BasePage {
 
@@ -21,6 +22,9 @@ public class BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    protected void waitImplicitly(int secondsToWait) {
+        driver.manage().timeouts().implicitlyWait(secondsToWait, TimeUnit.SECONDS);
+    }
     protected WebDriver getDriver() {
         return  driver;
     }

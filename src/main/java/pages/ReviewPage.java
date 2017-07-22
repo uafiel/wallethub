@@ -51,6 +51,7 @@ public class ReviewPage extends BasePage {
                 dropDownItems.get(i).click();
                 this.log.info(dropDownItems.get(i).getText() + " selected.");
                 itemExists = true;
+                waitImplicitly(3);
                 break;
             }
         }

@@ -1,54 +1,59 @@
 import general.BaseTest;
+import general.ExcelUtils;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.*;
 
 public class WriteReviewTests extends BaseTest {
 
 
-    @Test
-    public void AddReviewLongerThan200characters() throws InterruptedException {
+    @Test(dataProvider="TestData")
+    public void AddReview(String username, String password, String testUrl, String stars_1, String stars_2, String policy, String reviewText) throws InterruptedException {
         HomePage hp = new HomePage(driver);
         LoginPage login = hp.clickLoginBtn();
-        Thread.sleep(1000);
-        login.enterUsername("facebook_test@inbox.ru");
-        login.enterPassword("Wallet@123");
+        login.enterUsername(username);
+        login.enterPassword(password);
         ProfilePage pp = login.loginBtnClick();
-        Thread.sleep(2000);
-        loadDirectLink("https://wallethub.com/profile/test_insurance_company/", new ProfilePage(driver));
-        Thread.sleep(5000);
+        Thread.sleep(3000);
+        loadDirectLink(testUrl, new ProfilePage(driver));
+        Thread.sleep(3000);
 
         //(a) do the hover
         pp.hoverProfileRating();
-        Thread.sleep(3000);
         pp.isYourRatingPopUpDisplayed();
-        pp.setRating("4");
+        pp.setRating(stars_1);
 
         //(2) make sure the stars inside get lit up when you hover over them,
-        Assert.assertTrue(pp.verifyStarsAreHighlithed());
+        Assert.assertTrue(pp.verifyStarsAreHighlithed(stars_1));
 
-        pp.setRating("5");
-        Assert.assertTrue(pp.verifyStarsAreHighlithed());
+        pp.setRating(stars_2);
+        Thread.sleep(4000);
+        Assert.assertTrue(pp.verifyStarsAreHighlithed(stars_2));
 
-        ReviewPage reviewPage = pp.clickOnStar("5");
+        ReviewPage reviewPage = pp.clickOnStar(stars_2);
         reviewPage.expandDropDown();
-        reviewPage.selectDropDownItem("health");
+        reviewPage.selectDropDownItem(policy);
         Thread.sleep(4000);
 
-        reviewPage.enterReviewText("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
-                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu");
+        reviewPage.enterReviewText(reviewText);
         Thread.sleep(2000);
-        reviewPage.clickReviewStars("5");
+        reviewPage.clickReviewStars(stars_2);
         reviewPage.submitBtnClick();
-        Thread.sleep(10000);
+        Thread.sleep(2000);
         Assert.assertTrue(reviewPage.getSuccMsg().contains("has been posted."));
         Toolbar toolbar = new Toolbar(driver);
         pp = toolbar.navigateToProfilePage();
         pp.getLatestActivity();
 
         pp.clickReviewsTab();
+        Assert.assertEquals(pp.getLatestReview(),reviewText);
 
-        pp.getLatestReview();
+    }
 
+    @DataProvider
+    public Object[][] TestData() throws Exception {
+        Object[][] testObjArray = ExcelUtils.getTableArray("src/main/resources/TestData.xlsx", "Sheet1");
+        return (testObjArray);
     }
 }
